@@ -1,4 +1,6 @@
-< l!DOCTYPE html>
+
+
+<!DOCTYPE html>
 <html lang="fa">
 <head>
     <meta charset="UTF-8">
@@ -112,8 +114,41 @@
             display: flex;
             justify-content: center;
             gap: 20px;
+        }
 
-.liner {
+        .menu-item {
+            width: 150px;
+            height: 50px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.6);
+            outline: none;
+        }
+
+        .menu-item:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .menu-item.active {
+            background: rgba(255, 215, 0, 0.7);
+        }
+
+        .menu-item:active {
+            transform: scale(0.95);
+        }
+
+        .liner {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -162,7 +197,7 @@
             count = localStorage.getItem('coinCount') ? parseInt(localStorage.getItem('coinCount')) : 0;
             level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 1;
             document.getElementById('counter-text').innerText = count;
-            document.getElementById('level-text').innerText = Level ${level};
+            document.getElementById('level-text').innerText = `Level ${level}`;
         });
 
         document.getElementById('animated-btn').addEventListener('click', function(event) {
@@ -173,11 +208,11 @@
 
             const number = document.createElement('div');
             number.classList.add('number-animation');
-            number.innerText = +${increment};
+            number.innerText = `+${increment}`;
 
             const btnRect = this.getBoundingClientRect();
-            number.style.left = ${event.clientX - btnRect.left}px;
-            number.style.top = ${event.clientY - btnRect.top}px;
+            number.style.left = `${event.clientX - btnRect.left}px`;
+            number.style.top = `${event.clientY - btnRect.top}px`;
 
             this.appendChild(number);
 
@@ -206,7 +241,7 @@
         function checkLevelUp() {
             if (level < levelThresholds.length && count >= levelThresholds[level - 1]) {
                 level++;
-                document.getElementById('level-text').innerText = لول: ${level};
+                document.getElementById('level-text').innerText = `لول: ${level}`;
                 localStorage.setItem('level', level);
             }
         }
@@ -222,8 +257,7 @@
         });
 
         document.getElementById('page-2-btn').addEventListener('click', () => {
-
-if (currentPage !== 2) {
+            if (currentPage !== 2) {
                 document.getElementById('page-2-btn').classList.add('active');
                 document.getElementById('page-1-btn').classList.remove('active');
                 document.getElementById('main-container').style.display = 'none';
@@ -236,37 +270,3 @@ if (currentPage !== 2) {
 
 </body>
 </html>
-
-}
-
-        .menu-item {
-            width: 150px;
-            height: 50px;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background 0.3s ease, transform 0.3s ease;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.6);
-            outline: none;
-        }
-
-        .menu-item:hover {
-            background: rgba(0, 0, 0, 0.7);
-        }
-
-        .menu-item.active {
-            background: rgba(255, 215, 0, 0.7);
-        }
-
-        .menu-item:active {
-            transform: scale(0.95);
-        }
