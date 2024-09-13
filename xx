@@ -1,0 +1,272 @@
+< l!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good Cat</title>
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://imgurl.ir/uploads/m86171_IMG_20240707_213338_361.jpg') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent; /* حذف لاینر آبی */
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            margin-bottom: 150px;
+            color: #FFD700;
+        }
+
+        #level-text {
+            font-size: 32px;
+            color: #FFD700;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        #level-text::after {
+            content: '';
+            display: block;
+            width: 80%;
+            height: 5px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 50px;
+            margin: 10px auto 0 auto;
+        }
+
+        #counter-text {
+            font-size: 64px;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        #counter-text::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 50px;
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #animated-btn {
+            width: 250px;
+            height: 250px;
+            background: url('https://imgurl.ir/uploads/x21252_1723620215236.png') no-repeat center center;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #animated-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .number-animation {
+            position: absolute;
+            color: yellow;
+            font-size: 32px;
+            font-weight: bold;
+            animation: move-up 1s ease-out forwards;
+        }
+
+        @keyframes move-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px);
+            }
+        }
+
+        .menu {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+
+.liner {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 50px;
+        }
+
+        .soon-page {
+            display: none;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+        <div id="level-text">Level</div>
+        <div id="counter-text">0</div>
+        <button id="animated-btn"></button>
+    </div>
+
+    <div class="soon-page" id="soon-page">ولت تون خود را متصل کنید ( بزودی ... )</div>
+
+    <div class="menu">
+        <button id="page-1-btn" class="menu-item active">Home</button>
+        <button id="page-2-btn" class="menu-item">AirDrop</button>
+    </div>
+
+    <div class="liner"></div>
+
+    <script>
+        let count = 0;
+        let level = 1;
+        let currentPage = 1;
+        const levelThresholds = [10000, 200000, 500000, 700000, 1000000];
+        const incrementValues = [3, 5, 7, 9, 11];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            count = localStorage.getItem('coinCount') ? parseInt(localStorage.getItem('coinCount')) : 0;
+            level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 1;
+            document.getElementById('counter-text').innerText = count;
+            document.getElementById('level-text').innerText = Level ${level};
+        });
+
+        document.getElementById('animated-btn').addEventListener('click', function(event) {
+            let increment = incrementValues[level - 1];
+            count += increment;
+
+            animateCounter(count - increment, count, 500);
+
+            const number = document.createElement('div');
+            number.classList.add('number-animation');
+            number.innerText = +${increment};
+
+            const btnRect = this.getBoundingClientRect();
+            number.style.left = ${event.clientX - btnRect.left}px;
+            number.style.top = ${event.clientY - btnRect.top}px;
+
+            this.appendChild(number);
+
+            setTimeout(() => {
+                number.remove();
+            }, 1000);
+
+            localStorage.setItem('coinCount', count);
+            checkLevelUp();
+        });
+
+        function animateCounter(start, end, duration) {
+            let range = end - start;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+            let increment = end > start ? 1 : -1;
+            let timer = setInterval(() => {
+                current += increment;
+                document.getElementById('counter-text').innerText = current;
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        function checkLevelUp() {
+            if (level < levelThresholds.length && count >= levelThresholds[level - 1]) {
+                level++;
+                document.getElementById('level-text').innerText = لول: ${level};
+                localStorage.setItem('level', level);
+            }
+        }
+
+        document.getElementById('page-1-btn').addEventListener('click', () => {
+            if (currentPage !== 1) {
+                document.getElementById('page-1-btn').classList.add('active');
+                document.getElementById('page-2-btn').classList.remove('active');
+                document.getElementById('main-container').style.display = 'block';
+                document.getElementById('soon-page').style.display = 'none';
+                currentPage = 1;
+            }
+        });
+
+        document.getElementById('page-2-btn').addEventListener('click', () => {
+
+if (currentPage !== 2) {
+                document.getElementById('page-2-btn').classList.add('active');
+                document.getElementById('page-1-btn').classList.remove('active');
+                document.getElementById('main-container').style.display = 'none';
+                document.getElementById('soon-page').style.display = 'block';
+                currentPage = 2;
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+
+}
+
+        .menu-item {
+            width: 150px;
+            height: 50px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.6);
+            outline: none;
+        }
+
+        .menu-item:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .menu-item.active {
+            background: rgba(255, 215, 0, 0.7);
+        }
+
+        .menu-item:active {
+            transform: scale(0.95);
+        }
